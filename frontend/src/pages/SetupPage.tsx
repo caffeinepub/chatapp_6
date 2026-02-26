@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useSaveCallerUserProfile } from '../hooks/useQueries';
+import { useRegisterUser } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,7 +14,7 @@ export function SetupPage({ onComplete }: SetupPageProps) {
     const { identity, clear } = useInternetIdentity();
     const [displayName, setDisplayName] = useState('');
     const [inlineError, setInlineError] = useState<string | null>(null);
-    const saveProfile = useSaveCallerUserProfile();
+    const registerUser = useRegisterUser();
 
     const principal = identity?.getPrincipal().toString() ?? '';
     const shortPrincipal = principal.length > 20 ? `${principal.slice(0, 10)}…${principal.slice(-6)}` : principal;
@@ -34,11 +34,11 @@ export function SetupPage({ onComplete }: SetupPageProps) {
         }
 
         try {
-            await saveProfile.mutateAsync({ name: trimmed });
+            await registerUser.mutateAsync(trimmed);
             onComplete();
         } catch (err: unknown) {
             // Log full details for debugging
-            console.error('[SetupPage] Failed to create profile:', {
+            console.error('[SetupPage] Failed to register user:', {
                 error: err,
                 principal,
             });
@@ -49,12 +49,16 @@ export function SetupPage({ onComplete }: SetupPageProps) {
                 const msg = err.message.toLowerCase();
                 if (msg.includes('network') || msg.includes('fetch') || msg.includes('connection')) {
                     message = 'Network error — please check your connection and try again.';
+                } else if (msg.includes('already registered')) {
+                    message = 'This identity is already registered. Please refresh the page.';
+                } else if (msg.includes('anonymous')) {
+                    message = 'Anonymous principals cannot register. Please log in first.';
                 } else if (msg.includes('unauthorized') || msg.includes('trap')) {
-                    message = `Profile creation rejected: ${err.message}`;
+                    message = `Registration rejected: ${err.message}`;
                 } else if (msg.includes('actor not initialized')) {
                     message = 'Connection not ready. Please wait a moment and try again.';
                 } else {
-                    message = `Profile creation failed: ${err.message}`;
+                    message = `Registration failed: ${err.message}`;
                 }
             }
             setInlineError(message);
@@ -106,16 +110,17 @@ export function SetupPage({ onComplete }: SetupPageProps) {
 
                     <div className="rounded-lg bg-muted/50 px-3 py-2">
                         <p className="text-xs text-muted-foreground">
-                            Principal: <span className="font-mono text-foreground">{shortPrincipal}</span>
+                            Principal:{' '}
+                            <span className="font-mono text-foreground break-all">{shortPrincipal}</span>
                         </p>
                     </div>
 
                     <Button
                         type="submit"
                         className="w-full"
-                        disabled={!displayName.trim() || saveProfile.isPending}
+                        disabled={!displayName.trim() || registerUser.isPending}
                     >
-                        {saveProfile.isPending ? (
+                        {registerUser.isPending ? (
                             <span className="flex items-center gap-2">
                                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                                 Creating profile…

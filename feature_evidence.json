@@ -2,10 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-audit-and-fix-the-frontend-post-login-profile-creation-flow-in-frontend-src-pages-setuppage-tsx-and-frontend-src-hooks-usequeries-ts-ensure-the-registeruser-mutation-correctly-calls-the-backend-actor-passes-the-display-name-and-the-actor-interface-candid-types-used-in-the-frontend-matches-the-deployed-backend-s-api",
-      "featureTitle": "Audit and fix the frontend post-login profile creation flow in `frontend/src/pages/SetupPage.tsx` and `frontend/src/hooks/useQueries.ts`. Ensure the `registerUser` mutation correctly calls the backend actor, passes the display name, and the actor interface (Candid types) used in the frontend matches the deployed backend's API.",
+      "featureId": "feature-audit-and-fix-all-backend-call-failures-occurring-after-login-specifically-ensure-the-registeruser-function-in-backend-main-mo-has-the-correct-signature-and-stable-variable-declarations-ensure-the-frontend-actor-interface-candid-types-in-frontend-src-hooks-usequeries-ts-exactly-matches-the-deployed-backend-api-and-ensure-the-registeruser-mutation-in-frontend-src-pages-setuppage-tsx-correctly-invokes-the-actor-with-the-display-name-argument-the-error-in-sending-request-must-no-longer-appear-after-a-successful-login",
+      "featureTitle": "Audit and fix all backend call failures occurring after login. Specifically: ensure the `registerUser` function in `backend/main.mo` has the correct signature and stable variable declarations; ensure the frontend actor interface (Candid types) in `frontend/src/hooks/useQueries.ts` exactly matches the deployed backend API; and ensure the `registerUser` mutation in `frontend/src/pages/SetupPage.tsx` correctly invokes the actor with the display name argument. The 'Error in sending request' must no longer appear after a successful login.",
       "files": [
-        "frontend/src/App.tsx",
         "frontend/src/hooks/useQueries.ts",
         "frontend/src/pages/SetupPage.tsx"
       ],
@@ -18,16 +17,15 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-11"
+        "REQ-13"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-proper-error-surfacing-throughout-the-profile-creation-flow-catch-and-display-errors-from-the-registeruser-backend-call-in-the-ui-and-log-meaningful-error-details-to-the-browser-console-to-aid-debugging-ensure-no-errors-are-silently-swallowed",
-      "featureTitle": "Add proper error surfacing throughout the profile creation flow: catch and display errors from the `registerUser` backend call in the UI, and log meaningful error details to the browser console to aid debugging. Ensure no errors are silently swallowed.",
+      "featureId": "feature-display-the-logged-in-user-s-principal-id-in-the-chat-header-profile-area-after-login-in-frontend-src-components-chatheader-tsx-show-the-authenticated-user-s-principal-id-as-a-truncated-or-full-string-inside-the-user-dropdown-menu-or-next-to-the-user-s-display-name-so-it-is-visible-after-successful-authentication",
+      "featureTitle": "Display the logged-in user's principal ID in the chat header/profile area after login. In `frontend/src/components/ChatHeader.tsx`, show the authenticated user's principal ID (as a truncated or full string) inside the user dropdown menu or next to the user's display name, so it is visible after successful authentication.",
       "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/SetupPage.tsx"
+        "frontend/src/components/ChatHeader.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -38,7 +36,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-12"
+        "REQ-14"
       ],
       "confidence": "high"
     }

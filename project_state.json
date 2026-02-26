@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 9,
   "summary": "A private one-on-one chat application with Internet Identity (Google) login, auto-polling for near-real-time messages, and messages stored on the Internet Computer backend.",
   "architectural_notes": [
     "Messages stored on the Internet Computer backend canister",
@@ -9,7 +9,8 @@
   ],
   "known_issues": [
     "Deployment to Internet Computer is failing — root cause under investigation",
-    "'Failed to create profile' error on login — registerUser call failing, cause under investigation"
+    "'Failed to create profile' error on login — registerUser call failing, cause under investigation",
+    "Error in sending request after login — registerUser or another backend call failing post-authentication"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -74,6 +75,22 @@
       "title": "Add proper error surfacing throughout the profile creation flow: catch and display errors from the `registerUser` backend call in the UI, and log meaningful error details to the browser console to aid debugging. Ensure no errors are silently swallowed.",
       "reqIds": [
         "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-fix-all-backend-call-failures-occurring-after-login-specifically-ensure-the-registeruser-function-in-backend-main-mo-has-the-correct-signature-and-stable-variable-declarations-ensure-the-frontend-actor-interface-candid-types-in-frontend-src-hooks-usequeries-ts-exactly-matches-the-deployed-backend-api-and-ensure-the-registeruser-mutation-in-frontend-src-pages-setuppage-tsx-correctly-invokes-the-actor-with-the-display-name-argument-the-error-in-sending-request-must-no-longer-appear-after-a-successful-login",
+      "title": "Audit and fix all backend call failures occurring after login. Specifically: ensure the `registerUser` function in `backend/main.mo` has the correct signature and stable variable declarations; ensure the frontend actor interface (Candid types) in `frontend/src/hooks/useQueries.ts` exactly matches the deployed backend API; and ensure the `registerUser` mutation in `frontend/src/pages/SetupPage.tsx` correctly invokes the actor with the display name argument. The 'Error in sending request' must no longer appear after a successful login.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-the-logged-in-user-s-principal-id-in-the-chat-header-profile-area-after-login-in-frontend-src-components-chatheader-tsx-show-the-authenticated-user-s-principal-id-as-a-truncated-or-full-string-inside-the-user-dropdown-menu-or-next-to-the-user-s-display-name-so-it-is-visible-after-successful-authentication",
+      "title": "Display the logged-in user's principal ID in the chat header/profile area after login. In `frontend/src/components/ChatHeader.tsx`, show the authenticated user's principal ID (as a truncated or full string) inside the user dropdown menu or next to the user's display name, so it is visible after successful authentication.",
+      "reqIds": [
+        "REQ-14"
       ],
       "version": 1
     }
@@ -145,6 +162,18 @@
       "reqIds": [
         "REQ-10"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Fix 'Error in sending request' after login — audit and fix registerUser and other backend calls failing post-login",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Display logged-in user's principal ID in the header/profile area after login",
+      "reqIds": [],
       "status": "pending"
     }
   ],

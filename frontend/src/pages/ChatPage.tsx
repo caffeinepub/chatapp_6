@@ -3,12 +3,15 @@ import { ConversationList } from '../components/ConversationList';
 import { MessageThread } from '../components/MessageThread';
 import { ChatHeader } from '../components/ChatHeader';
 import { useGetCurrentUser } from '../hooks/useQueries';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import type { ChatUser } from '../hooks/useQueries';
 
 export function ChatPage() {
     const [selectedUser, setSelectedUser] = useState<ChatUser | null>(null);
     const [mobileView, setMobileView] = useState<'list' | 'thread'>('list');
-    const { data: currentUser } = useGetCurrentUser();
+    const { identity } = useInternetIdentity();
+    const principal = identity?.getPrincipal().toString() ?? '';
+    const { data: currentUser } = useGetCurrentUser(principal);
 
     const handleSelectUser = (user: ChatUser) => {
         setSelectedUser(user);

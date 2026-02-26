@@ -1,72 +1,26 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T05:51:27.680Z",
-  "summary": "The diff implements fixes for the 'Failed to create profile' error across backend and frontend. REQ-10 is partially addressed with a new backend profile storage approach (saveCallerUserProfile instead of registerUser). REQ-11 and REQ-12 are substantially implemented in SetupPage.tsx and useQueries.ts. However, several specific acceptance criteria have gaps.",
-  "missing_requirements": [
-    {
-      "id": "REQ-10",
-      "requirement": "Re-calling registerUser for an existing principal returns an appropriate response without overwriting the profile unintentionally.",
-      "reason": "The backend uses saveCallerUserProfile which calls userProfiles.add(caller, profile) unconditionally with no guard preventing overwrite of an existing profile and no distinct response for an already-registered user.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "requirement": "The useRegisterUser mutation in useQueries.ts uses the correct Candid argument and return types matching the deployed backend.",
-      "reason": "The diff replaces useRegisterUser entirely with useSaveCallerUserProfile. The spec explicitly names useRegisterUser as the mutation to fix, and no such export exists in the modified useQueries.ts.",
-      "evidence": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/SetupPage.tsx"
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "requirement": "Errors are logged to the browser console with enough detail including error object, principal, and canister ID.",
-      "reason": "The error logging in SetupPage includes the error object and principal but does not include the canister ID, which is explicitly required by the acceptance criteria.",
-      "evidence": [
-        "frontend/src/pages/SetupPage.tsx"
-      ]
-    }
-  ],
+  "generatedAt": "2026-02-26T07:51:24.126Z",
+  "summary": "Both REQ-13 and REQ-14 appear to be implemented in the diff. REQ-13 is addressed by fixing the backend registerUser function, updating useQueries.ts with a useRegisterUser mutation that calls actor.registerUser(displayName), and updating SetupPage.tsx to use useRegisterUser instead of useSaveCallerUserProfile. REQ-14 is addressed in ChatHeader.tsx by reading the principal from useInternetIdentity and displaying it in a styled monospace block with copy-to-clipboard functionality inside the dropdown menu.",
+  "missing_requirements": [],
   "hallucinated_features": [
     {
-      "description": "Added frontend/src/utils/urlParams.ts utility with URL parameter parsing, sessionStorage persistence, and admin token handling for caffeineAdminToken.",
-      "reason": "No requirement in the build request mentions URL parameter utilities, sessionStorage management, or admin token handling. This is unrelated to fixing the profile creation error.",
+      "description": "Copy-to-clipboard button with checkmark confirmation for the principal ID in ChatHeader",
+      "reason": "The build request only asked to display the principal ID (truncated or full). A copy-to-clipboard button with clipboard API integration and visual feedback (Check icon, 2-second timeout) was not requested.",
       "evidence": [
-        "frontend/src/utils/urlParams.ts",
-        "frontend/src/hooks/useActor.ts"
-      ]
-    },
-    {
-      "description": "The useActor.ts hook calls actor._initializeAccessControlWithSecret(adminToken) using an admin token extracted from URL parameters.",
-      "reason": "No requirement mentions initializing access control with a secret token or admin token flow. This functionality is not part of the fix for the profile creation error.",
-      "evidence": [
-        "frontend/src/hooks/useActor.ts"
-      ]
-    },
-    {
-      "description": "Backend includes a full project, workflow, and task CRUD system with access control authorization mixins.",
-      "reason": "The build request only asks to fix the profile creation flow. Adding project, workflow, task management and an authorization mixin system goes beyond the stated requirements and non-goals.",
-      "evidence": [
-        "backend/main.mo"
+        "frontend/src/components/ChatHeader.tsx"
       ]
     }
   ],
-  "confidence": 0.72,
+  "confidence": 0.82,
   "changed_files": [
     "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
     "frontend/src/components/ChatHeader.tsx",
-    "frontend/src/components/ConversationList.tsx",
-    "frontend/src/components/MessageThread.tsx",
-    "frontend/src/hooks/useActor.ts",
     "frontend/src/hooks/useQueries.ts",
     "frontend/src/pages/ChatPage.tsx",
     "frontend/src/pages/SetupPage.tsx",
-    "frontend/src/utils/urlParams.ts",
     "project_state.json"
   ]
 }

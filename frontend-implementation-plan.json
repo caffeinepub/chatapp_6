@@ -1,53 +1,42 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix 'Failed to create profile' error on login",
+  "title": "Fix post-login request errors and display principal ID in header",
   "requirements": [
     {
-      "id": "REQ-11",
-      "summary": "Audit and fix the frontend post-login profile creation flow to ensure the registerUser mutation correctly calls the backend actor with the correct Candid types and handles the response appropriately.",
+      "id": "REQ-13",
+      "summary": "Fix backend call failures after login by ensuring the frontend actor interface and registerUser mutation match the deployed backend API",
       "acceptanceCriteria": [
-        "After Internet Identity login, the SetupPage successfully submits a display name and calls `registerUser` on the backend actor without throwing.",
-        "The `useRegisterUser` mutation in `useQueries.ts` uses the correct Candid argument and return types matching the deployed backend.",
-        "A successful registration navigates the user into the main ChatPage.",
-        "If `registerUser` fails, a clear, human-readable error message is shown to the user on SetupPage rather than silently failing."
+        "After logging in with Internet Identity, no 'Error in sending request' toast or console error appears",
+        "The registerUser mutation successfully creates a user profile on first login",
+        "The frontend useQueries.ts actor interface types match the deployed backend API exactly"
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Remove the useRegisterUser mutation if it exists and replace it with a mutation that calls `saveCallerUserProfile` (as provided by the authorization component and confirmed in backend.d.ts). The mutation should accept a UserProfile object with a `name` field matching the backend's UserProfile type. Ensure the mutation properly invalidates the 'currentUserProfile' query key on success. Verify the component's usage instructions before implementing."
+          "description": "Update the actor interface to match the backend API exactly. Ensure registerUser is defined as registerUser(displayName: string): Promise<void> matching the backend signature. Verify all actor method signatures match the types in frontend/src/backend.d.ts. Update the useSaveProfile mutation to correctly invoke actor.registerUser(profile.name) with the display name argument."
         },
         {
           "path": "frontend/src/pages/SetupPage.tsx",
           "operation": "modify",
-          "description": "Update the profile registration form to call the corrected `useSaveCallerUserProfile` mutation (or equivalent) that invokes `saveCallerUserProfile` from the backend actor. Pass a UserProfile object with the user-entered display name. On successful mutation, navigate to the ChatPage. Add error handling that displays a user-friendly error message inline if the mutation fails, and log the full error details to the console for debugging. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Audit the conditional rendering logic that determines when to show SetupPage vs ChatPage. Ensure it correctly uses the useGetCallerUserProfile hook (from the authorization component) to check for the existence of a user profile. If the profile fetch is still loading, show a loading state. If the profile is null and the user is authenticated, render SetupPage. If the profile exists, render ChatPage. Ensure no race conditions cause premature navigation or modal flashing. Verify the component's usage instructions before implementing."
+          "description": "Ensure the registerUser mutation is invoked correctly with the display name argument. Verify the mutation calls actor.registerUser(displayName) (not actor.saveCallerUserProfile). Add error boundary handling to catch and display any request errors with specific error messages. Ensure the onSuccess callback invalidates the currentUserProfile query to refresh the user state after successful registration."
         }
       ]
     },
     {
-      "id": "REQ-12",
-      "summary": "Add proper error surfacing throughout the profile creation flow by catching and displaying errors from the backend call in the UI and logging meaningful error details to the browser console.",
+      "id": "REQ-14",
+      "summary": "Display the logged-in user's principal ID in the ChatHeader component after authentication",
       "acceptanceCriteria": [
-        "Any error thrown during `registerUser` is caught and shown as an inline error message on the SetupPage.",
-        "The error message indicates whether it is a network error, a canister rejection, or a validation issue.",
-        "Errors are also logged to the browser console with enough detail (error object, principal, canister ID) to diagnose the root cause."
+        "After login, the user's principal ID is visible in the ChatHeader component (e.g., inside the user dropdown or beneath the display name)",
+        "The principal ID is either displayed in full or truncated with ellipsis for readability",
+        "The principal ID display does not break the existing header layout or theme"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/SetupPage.tsx",
+          "path": "frontend/src/components/ChatHeader.tsx",
           "operation": "modify",
-          "description": "Enhance the error handling in the profile creation form. When the mutation fails, parse the error to distinguish between network errors, canister rejections, and validation issues. Display a specific, human-readable inline error message to the user (e.g., 'Network error, please try again', 'Profile creation failed: [rejection message]', or 'Invalid profile data'). Log the full error object, the user's principal (from useInternetIdentity), and the canister ID (from the actor) to the console to aid debugging. Ensure no errors are silently swallowed and that all catch blocks surface meaningful feedback."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Ensure the `useSaveCallerUserProfile` mutation (or equivalent profile-saving mutation) does not suppress errors. Configure the mutation's onError handler to log the full error details, including error type, message, and any available stack trace, to the console. Pass the error through to the UI layer so SetupPage can display it appropriately. Do not wrap errors in generic messages; preserve the original error object for debugging."
+          "description": "Add display of the logged-in user's principal ID inside the user dropdown menu. Import useInternetIdentity hook to access the identity object. Extract the principal ID using identity?.getPrincipal().toString(). Display the principal ID beneath the display name in the dropdown menu, either truncated (e.g., first 8 and last 4 characters with ellipsis) or in full. Style the principal ID text with smaller font size and muted color (text-muted-foreground) to maintain visual hierarchy. Ensure the layout remains responsive and does not overflow on mobile devices."
         }
       ]
     }

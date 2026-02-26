@@ -44,6 +44,7 @@ export interface backendInterface {
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     getUserRole(user: Principal): Promise<UserRole>;
     isCallerAdmin(): Promise<boolean>;
+    registerUser(displayName: string): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     updateProject(project: Project): Promise<void>;
 }

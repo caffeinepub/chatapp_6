@@ -46,6 +46,7 @@ export const idlService = IDL.Service({
     ),
   'getUserRole' : IDL.Func([IDL.Principal], [UserRole], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'registerUser' : IDL.Func([IDL.Text], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'updateProject' : IDL.Func([Project], [], []),
 });
@@ -91,6 +92,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getUserRole' : IDL.Func([IDL.Principal], [UserRole], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'registerUser' : IDL.Func([IDL.Text], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'updateProject' : IDL.Func([Project], [], []),
   });

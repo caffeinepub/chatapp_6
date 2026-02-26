@@ -183,4 +183,17 @@ actor {
     };
     AccessControl.getUserRole(accessControlState, user);
   };
+
+  // ---- User Registration ----
+  public shared ({ caller }) func registerUser(displayName : Text) : async () {
+    if (caller.isAnonymous()) {
+      Runtime.trap("Anonymous principals cannot register");
+    };
+    if (AccessControl.getUserRole(accessControlState, caller) != #guest) {
+      Runtime.trap("User is already registered");
+    };
+    let profile : UserProfile = { name = displayName };
+    userProfiles.add(caller, profile);
+    AccessControl.assignRole(accessControlState, caller, caller, #user);
+  };
 };

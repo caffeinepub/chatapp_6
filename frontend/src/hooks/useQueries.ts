@@ -50,6 +50,30 @@ export function useGetCallerUserProfile() {
     };
 }
 
+/**
+ * useRegisterUser — for first-time registration.
+ * Calls actor.registerUser(displayName) which assigns the #user role
+ * and saves the profile in a single atomic operation.
+ */
+export function useRegisterUser() {
+    const { actor } = useActor();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (displayName: string) => {
+            if (!actor) throw new Error('Actor not initialized');
+            return actor.registerUser(displayName);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+            queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+        },
+        onError: (error: unknown) => {
+            console.error('[useRegisterUser] Registration failed:', error);
+        },
+    });
+}
+
 export function useSaveCallerUserProfile() {
     const { actor } = useActor();
     const queryClient = useQueryClient();
@@ -70,20 +94,17 @@ export function useSaveCallerUserProfile() {
 
 // ─── Chat UI Hooks (use local ChatUser type) ──────────────────────────────────
 
-export function useGetCurrentUser() {
+export function useGetCurrentUser(principalOverride?: string) {
     const { actor, isFetching } = useActor();
 
     return useQuery<ChatUser | null>({
-        queryKey: ['currentUser'],
+        queryKey: ['currentUser', principalOverride],
         queryFn: async () => {
             if (!actor) return null;
             try {
                 const result = await actor.getCallerUserProfile();
                 if (!result) return null;
-                // We don't have the principal here from the profile alone;
-                // return a ChatUser with name mapped to displayName.
-                // Principal will be filled in by the caller via identity if needed.
-                return { principal: '', displayName: result.name };
+                return { principal: principalOverride ?? '', displayName: result.name };
             } catch {
                 return null;
             }
