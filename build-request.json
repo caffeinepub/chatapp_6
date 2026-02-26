@@ -1,0 +1,84 @@
+{
+  "kind": "build_request",
+  "title": "Fix 'Failed to create profile' error on login",
+  "projectName": "ChatApp IC",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-10",
+      "text": "Audit and fix the `registerUser` function in `backend/main.mo` to ensure it correctly stores a user profile (principal ID + display name) without trapping. Verify the function signature, stable variable declarations, and return type are valid and match what the frontend expects.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Failed to create profile",
+          "registerUser"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The `registerUser` function compiles without errors in Motoko.",
+        "Calling `registerUser` with a valid display name persists the user profile keyed by caller principal.",
+        "The function does not trap on a first-time call for a new principal.",
+        "Re-calling `registerUser` for an existing principal returns an appropriate response without overwriting the profile unintentionally."
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Audit and fix the frontend post-login profile creation flow in `frontend/src/pages/SetupPage.tsx` and `frontend/src/hooks/useQueries.ts`. Ensure the `registerUser` mutation correctly calls the backend actor, passes the display name, and the actor interface (Candid types) used in the frontend matches the deployed backend's API.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Failed to create profile",
+          "frontend post-login call",
+          "actor interface alignment"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After Internet Identity login, the SetupPage successfully submits a display name and calls `registerUser` on the backend actor without throwing.",
+        "The `useRegisterUser` mutation in `useQueries.ts` uses the correct Candid argument and return types matching the deployed backend.",
+        "A successful registration navigates the user into the main ChatPage.",
+        "If `registerUser` fails, a clear, human-readable error message is shown to the user on SetupPage rather than silently failing."
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Add proper error surfacing throughout the profile creation flow: catch and display errors from the `registerUser` backend call in the UI, and log meaningful error details to the browser console to aid debugging. Ensure no errors are silently swallowed.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "add proper error surfacing",
+          "swallowing the real failure"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Any error thrown during `registerUser` is caught and shown as an inline error message on the SetupPage.",
+        "The error message indicates whether it is a network error, a canister rejection, or a validation issue.",
+        "Errors are also logged to the browser console with enough detail (error object, principal, canister ID) to diagnose the root cause."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not change the authentication flow in frontend/src/hooks/useInternetIdentity.ts (immutable path).",
+    "Do not alter frontend/src/main.tsx (immutable path).",
+    "Do not modify files under frontend/src/components/ui (immutable path).",
+    "Keep all Motoko logic within the single actor in backend/main.mo."
+  ],
+  "nonGoals": [
+    "Redesigning or restyling any UI screens.",
+    "Adding new chat features beyond fixing the profile creation error.",
+    "Changing the auto-polling interval or message thread behavior.",
+    "Migrating existing stored data (no schema change required)."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

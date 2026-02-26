@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "A private one-on-one chat application with Internet Identity (Google) login, auto-polling for near-real-time messages, and messages stored on the Internet Computer backend.",
+  "architectural_notes": [
+    "Messages stored on the Internet Computer backend canister",
+    "No WebSocket support; use polling-based message refresh every few seconds",
+    "Authentication via Internet Identity (passwordless, supports Google)"
+  ],
+  "known_issues": [
+    "Deployment to Internet Computer is failing — root cause under investigation",
+    "'Failed to create profile' error on login — registerUser call failing, cause under investigation"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-implement-internet-identity-authentication-with-google-sign-in-as-an-option-via-internet-identity-so-users-must-be-logged-in-to-access-any-chat-functionality-on-first-login-prompt-the-user-to-set-a-display-name-before-entering-the-app",
+      "title": "Implement Internet Identity authentication (with Google sign-in as an option via Internet Identity) so users must be logged in to access any chat functionality. On first login, prompt the user to set a display name before entering the app.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-conversation-list-panel-showing-all-users-the-authenticated-user-has-previously-chatted-with-displaying-each-contact-s-name-and-the-latest-message-snippet-include-a-new-chat-button-that-opens-a-searchable-list-of-all-registered-users-to-start-a-new-conversation",
+      "title": "Build a conversation list panel showing all users the authenticated user has previously chatted with, displaying each contact's name and the latest message snippet. Include a 'New Chat' button that opens a searchable list of all registered users to start a new conversation.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-message-thread-view-that-displays-all-messages-exchanged-between-the-authenticated-user-and-a-selected-contact-with-sent-messages-visually-distinguished-from-received-messages-include-a-text-input-and-send-button-to-send-new-messages",
+      "title": "Build a message thread view that displays all messages exchanged between the authenticated user and a selected contact, with sent messages visually distinguished from received messages. Include a text input and send button to send new messages.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-auto-polling-for-the-active-conversation-and-the-conversation-list-every-5-seconds-so-new-messages-appear-without-manual-refresh-using-react-query-s-refetchinterval",
+      "title": "Implement auto-polling for the active conversation and the conversation list every 5 seconds so new messages appear without manual refresh, using React Query's refetchInterval.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-clean-modern-dark-themed-visual-design-with-a-deep-charcoal-slate-color-palette-warm-accent-colors-for-sent-messages-clear-typography-and-a-two-panel-layout-conversation-list-on-the-left-message-thread-on-the-right-suited-for-a-chat-application-enforce-the-theme-consistently-across-all-screens",
+      "title": "Apply a clean, modern dark-themed visual design with a deep charcoal/slate color palette, warm accent colors for sent messages, clear typography, and a two-panel layout (conversation list on the left, message thread on the right) suited for a chat application. Enforce the theme consistently across all screens.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-fix-all-frontend-build-errors-in-the-react-typescript-application-that-may-be-preventing-the-dfx-deploy-pipeline-from-completing-ensure-all-typescript-types-are-correct-all-imports-resolve-and-the-frontend-builds-successfully",
+      "title": "Audit and fix all frontend build errors in the React TypeScript application that may be preventing the dfx deploy pipeline from completing. Ensure all TypeScript types are correct, all imports resolve, and the frontend builds successfully.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-fix-the-frontend-post-login-profile-creation-flow-in-frontend-src-pages-setuppage-tsx-and-frontend-src-hooks-usequeries-ts-ensure-the-registeruser-mutation-correctly-calls-the-backend-actor-passes-the-display-name-and-the-actor-interface-candid-types-used-in-the-frontend-matches-the-deployed-backend-s-api",
+      "title": "Audit and fix the frontend post-login profile creation flow in `frontend/src/pages/SetupPage.tsx` and `frontend/src/hooks/useQueries.ts`. Ensure the `registerUser` mutation correctly calls the backend actor, passes the display name, and the actor interface (Candid types) used in the frontend matches the deployed backend's API.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-proper-error-surfacing-throughout-the-profile-creation-flow-catch-and-display-errors-from-the-registeruser-backend-call-in-the-ui-and-log-meaningful-error-details-to-the-browser-console-to-aid-debugging-ensure-no-errors-are-silently-swallowed",
+      "title": "Add proper error surfacing throughout the profile creation flow: catch and display errors from the `registerUser` backend call in the UI, and log meaningful error details to the browser console to aid debugging. Ensure no errors are silently swallowed.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Private one-on-one chat between users",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Internet Identity login with Google sign-in support",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Auto-polling every few seconds for new messages",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Conversation list and message thread UI",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "User search/selection to start private conversations",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Implement a backend actor that stores user profiles (principal ID + display name), private messages (sender, recipient, text content, timestamp), and exposes query/update functions: registerUser, getUsers, sendMessage, getConversation(otherUser), getMyConversations.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Audit and fix all Motoko compilation errors in the backend actor (backend/main.mo) that are preventing successful deployment to the Internet Computer. Ensure all types, function signatures, and stable variable declarations are valid and compile without errors.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Verify and fix the dfx.json canister configuration to ensure both the backend and frontend canisters are correctly declared with valid source paths, build commands, and dependencies so that the full dfx deploy command succeeds end-to-end.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Fix 'Failed to create profile' error — audit and fix registerUser backend function, frontend post-login call, actor interface alignment, and add proper error surfacing",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Audit and fix the `registerUser` function in `backend/main.mo` to ensure it correctly stores a user profile (principal ID + display name) without trapping. Verify the function signature, stable variable declarations, and return type are valid and match what the frontend expects.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "ChatApp",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -1,0 +1,78 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-26T05:51:27.683Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 3,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-10",
+        "summary": "Audit and fix the `registerUser` function in `backend/main.mo` to ensure it correctly stores a user profile (principal ID + display name) without trapping. Verify the function signature, stable variable declarations, and return type are valid and match what the frontend expects.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-11",
+        "summary": "Audit and fix the frontend post-login profile creation flow in `frontend/src/pages/SetupPage.tsx` and `frontend/src/hooks/useQueries.ts`. Ensure the `registerUser` mutation correctly calls the backend actor, passes the display name, and the actor interface (Candid types) used in the frontend matches the deployed backend's API.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/SetupPage.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/SetupPage.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-12",
+        "summary": "Add proper error surfacing throughout the profile creation flow: catch and display errors from the `registerUser` backend call in the UI, and log meaningful error details to the browser console to aid debugging. Ensure no errors are silently swallowed.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/SetupPage.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/SetupPage.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/authorization/MixinAuthorization.mo",
+    "backend/authorization/access-control.mo",
+    "backend/main.mo",
+    "build-request.json",
+    "build-template/README.md",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/ChatHeader.tsx",
+    "frontend/src/components/ConversationList.tsx",
+    "frontend/src/components/MessageThread.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/ChatPage.tsx",
+    "frontend/src/pages/SetupPage.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}
